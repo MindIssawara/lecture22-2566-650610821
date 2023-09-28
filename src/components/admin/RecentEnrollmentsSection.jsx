@@ -5,6 +5,7 @@ import { Group, Loader, Paper, Text, Title } from "@mantine/core";
 import { useStore } from "@nanostores/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { date } from "zod";
 
 export const RecentEnrollmentsSection = () => {
   const { token } = useStore($authenStore);
@@ -32,6 +33,10 @@ export const RecentEnrollmentsSection = () => {
     callRecentEnrollmentApi();
   }, []);
 
+  function computeDate(dateISOString) {
+    const date = new Date(dateISOString);
+    return date.toLocaleTimeString() + " " + date.toLocaleDateString();
+  }
   return (
     <Paper withBorder p="md">
       <Title order={4}>Recent Enrollment(s)</Title>
@@ -43,9 +48,13 @@ export const RecentEnrollmentsSection = () => {
         recentEnrollments.map((enroll) => (
           <Group spacing="xs" key={enroll.id}>
             <Text fw="bold" color="dimmed"></Text>
+            {enroll.student.studentId} - {enroll.student.firstName}
             <Text color="dimmed">👉</Text>
+            {enroll.course.courseNo} - {enroll.course.title}
             <Text fw="bold" color="dimmed"></Text>
-            <Text color="dimmed" ml="auto"></Text>
+            <Text color="dimmed" ml="auto">
+              {computeDate(enroll.createdAt)}
+            </Text>
           </Group>
         ))}
     </Paper>
